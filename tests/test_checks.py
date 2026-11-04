@@ -133,5 +133,29 @@ class CheckTests(unittest.TestCase):
         self.assertIn("git", hint)
 
 
+class ZeroDependencyTests(unittest.TestCase):
+    """A project with nothing to install has nothing to lock."""
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def test_no_runtime_dependencies_passes_lockfile(self) -> None:
+        write(self.root / "pyproject.toml", '[project]\nname = "slim"\n')
+        status, detail, _ = check_lockfile(self.root)
+        self.assertIs(status, Status.PASS)
+        self.assertIn("no runtime dependencies", detail)
+
+    def test_declared_dependencies_without_lockfile_fail(self) -> None:
+        write(self.root / "pyproject.toml", '[project]\nname = "x"\ndependencies = ["requests>=2"]\n')
+        self.assertIs(check_lockfile(self.root)[0], Status.FAIL)
+
+    def test_unknown_manifest_shape_does_not_pass(self) -> None:
+        write(self.root / "requirements.txt", "requests\n")
+        self.assertIs(check_lockfile(self.root)[0], Status.FAIL)
+
 if __name__ == "__main__":
     unittest.main()

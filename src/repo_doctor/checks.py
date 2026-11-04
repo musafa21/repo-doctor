@@ -158,8 +158,28 @@ def check_dependencies(root: Path) -> tuple[Status, str, str]:
     return Status.FAIL, "no dependency manifest", "Declare dependencies in pyproject.toml or package.json."
 
 
+def _runtime_dependencies(root: Path) -> list[str] | None:
+    """Declared runtime dependencies, or ``None`` when this is not knowable.
+
+    A project with no runtime dependencies has nothing to lock, so scoring it
+    as a failure would punish the safest possible dependency posture.
+    """
+    manifest = root / "pyproject.toml"
+    if manifest.is_file():
+        text = _text(manifest)
+        match = re.search(r"(?ms)^\s*dependencies\s*=\s*\[(.*?)\]", text)
+        if match is None:
+            return []
+        body = re.sub(r"\s|,", "", match.group(1))
+        return [body] if body else []
+    for name in ("requirements.txt", "package.json", "Cargo.toml", "go.mod", "Gemfile"):
+        if (root / name).is_file():
+            return None
+    return None
+
+
 def check_lockfile(root: Path) -> tuple[Status, str, str]:
-    """A committed lockfile, or at least pinned requirements."""
+    """A committed lockfile, or nothing to lock."""
     present = (
         {entry.name.lower(): entry.name for entry in root.iterdir() if entry.is_file()}
         if root.is_dir()
@@ -175,6 +195,9 @@ def check_lockfile(root: Path) -> tuple[Status, str, str]:
     ]
     if pinned:
         return Status.PARTIAL, f"{pinned[0].name} pins versions", "Commit a real lockfile (uv.lock, poetry.lock) for exact reproduction."
+    runtime = _runtime_dependencies(root)
+    if runtime is not None and not runtime:
+        return Status.PASS, "no runtime dependencies", ""
     return Status.FAIL, "no lockfile", "Commit a lockfile so installs are reproducible."
 
 

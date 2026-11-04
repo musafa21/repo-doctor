@@ -81,7 +81,7 @@ Fix next:
 | License | 10 | `LICENSE`, or a declared license in the manifest |
 | Gitignore | 10 | covers at least two common artifact patterns |
 | Dependencies | 10 | a manifest (`pyproject.toml`, `package.json`, …) |
-| Lockfile | 5 | a committed lockfile, or partial credit for pinned requirements |
+| Lockfile | 5 | a committed lockfile, partial credit for pinned requirements, or nothing to lock |
 | Security | 5 | `SECURITY.md` or `.github/dependabot.yml` |
 | Docs | 5 | `CONTRIBUTING.md`, `CHANGELOG.md`, or `docs/` |
 | Activity | 5 | a commit within the last 180 days |

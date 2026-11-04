@@ -10,7 +10,7 @@ One command. Ten checks. A number out of 100, and the specific fixes that move i
 
 ```console
 $ repo-doctor musafa21/simple_shell
-Score 46/100 (F) - 5 failing, 2 partial
+Score 10/100 (F) - 9 failing, 1 partial
 ```
 
 ## Why this exists
@@ -52,23 +52,23 @@ Remote targets are shallow-cloned into a temporary directory and removed afterwa
 
 ```console
 $ repo-doctor .
-repo-doctor 0.1.0 - /home/dev/demo
+repo-doctor 0.1.0 - /home/dev/repo-doctor
 
-  PASS  README         20/20  README.md: 3412 chars, 7 sections, code samples
-  PASS  CI             15/15  1 workflow(s) with run steps
-  PASS  Tests          15/15  3 file(s) under tests/
-  PASS  License        10/10  LICENSE present
-  PASS  Gitignore      10/10  covers 4 common patterns
-  PASS  Dependencies   10/10  pyproject.toml
-  PART  Lockfile        2.5/5  requirements-dev.txt pins versions
-  PASS  Security        5/5   SECURITY.md
-  PASS  Docs            5/5   CHANGELOG.md
-  PASS  Activity        5/5   last commit 0 days ago
+  PASS  README        20/20  README.md: 5239 chars, 11 sections, code samples
+  PASS  CI            15/15  1 workflow(s) with run steps
+  PASS  Tests         15/15  2 file(s) under tests/
+  PASS  License       10/10  LICENSE present
+  PASS  Gitignore     10/10  covers 7 common patterns
+  PASS  Dependencies  10/10  pyproject.toml
+  FAIL  Lockfile        0/5  no lockfile
+  PASS  Security        5/5  SECURITY.md
+  PASS  Docs            5/5  CONTRIBUTING.md
+  PASS  Activity        5/5  last commit 0 days ago
 
-Score 97/100 (A) - 1 partial
+Score 95/100 (A) - 1 failing
 
 Fix next:
-  1. Lockfile: Commit a real lockfile (uv.lock, poetry.lock) for exact reproduction.
+  1. Lockfile: Commit a lockfile so installs are reproducible.
 ```
 
 ## What it checks
@@ -116,6 +116,8 @@ python -m venv .venv
 pip install -e ".[dev]"
 pytest
 ```
+
+The suite is written with `unittest`, so it also runs on a bare interpreter with nothing installed — `PYTHONPATH=src python -m unittest discover -s tests`. CI runs it through `pytest`, which collects the same cases.
 
 The checks are pure functions from a `Path` to a result, so each one is tested against a temporary directory rather than mocked filesystem calls. To see the whole suite run on this repository:
 

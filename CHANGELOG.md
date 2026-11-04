@@ -6,6 +6,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- Raised the minimum supported Python to 3.10; 3.9 reached end-of-life in
+  October 2025 and current build backends no longer support it.
+
 ## [0.1.0] - 2026-11-04
 
 ### Added

@@ -2,7 +2,7 @@
 
 [![ci](https://github.com/musafa21/repo-doctor/actions/workflows/ci.yml/badge.svg)](https://github.com/musafa21/repo-doctor/actions/workflows/ci.yml)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![python](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue.svg)](pyproject.toml)
+[![python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue.svg)](pyproject.toml)
 
 **Score any repository the way a reviewer does — before someone else does.**
 
@@ -21,7 +21,7 @@ A repository is read in seconds, then judged. Does it look maintained? Can I ins
 
 ## Install
 
-Requires Python 3.9+. No runtime dependencies — the standard library only.
+Requires Python 3.10+. No runtime dependencies — the standard library only.
 
 ```bash
 pipx install git+https://github.com/musafa21/repo-doctor
